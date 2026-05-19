@@ -6,8 +6,8 @@ services:
       context: ./api
       target: runtime
     ports:
-      -"8000:8000"
-    environemnt:
+      - "8000:8000"
+    environment:
       - DATABASE_URL=postgresql://postgres:password@db:5432/urldb
       - REDIS_URL=redis://cache:6379/0
     depends_on:
@@ -15,10 +15,10 @@ services:
         condition: service_healthy
       cache:
         condition: service_healthy
-      volumes:
-        - ./api/app:/home/appuser/app/app
+    volumes:
+      - ./api/app:/home/appuser/app/app
   db:
-    image: postgress:16-alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: urldb
       POSTGRES_USER: postgres
