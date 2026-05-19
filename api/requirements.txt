@@ -1,7 +1,6 @@
 uvicorn[standard]
 fastapi
 sqlalchemy
-postgres:16-alpine
 psycopg2-binary
 redis
 prometheus-fastapi-instrumentator
