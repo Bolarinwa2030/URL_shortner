@@ -1,0 +1,21 @@
+# Environment files — NEVER commit these
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Terraform state — use remote backend instead
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Misc
+node_modules/
+dist/
+.DS_Store
