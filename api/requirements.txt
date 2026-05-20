@@ -4,4 +4,7 @@ sqlalchemy
 psycopg2-binary
 redis
 prometheus-fastapi-instrumentator
+pytest
+pytest-cov
+ruff
 
