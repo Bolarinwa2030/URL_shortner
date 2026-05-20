@@ -7,4 +7,4 @@ prometheus-fastapi-instrumentator
 pytest
 pytest-cov
 ruff
-
+httpx
