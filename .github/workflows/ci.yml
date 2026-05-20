@@ -64,7 +64,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           cd api
-          pytest tests/ -v --cov=app --cov-report=xml
+          PYTHONPATH=. pytest tests/ -v --cov=app --cov-report=xml
 
       - uses: codecov/codecov-action@v4
 
