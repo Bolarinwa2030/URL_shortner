@@ -1,4 +1,4 @@
-import random 
+import random
 import string
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
@@ -10,20 +10,20 @@ from pydantic import BaseModel, HttpUrl
 
 router = APIRouter()
 
+
 class URLCreate(BaseModel):
     original_url: HttpUrl
     custom_alias: str | None = None
 
+
 def generate_short_code(length: int = 6) -> str:
     """Generate a random alphanumeric short code."""
     chars = string.ascii_letters + string.digits
-    return ''.join(random.choices(chars, k=length))
+    return "".join(random.choices(chars, k=length))
+
 
 @router.post("/shorten")
-async def shorten_url(
-    payload: URLCreate,
-    db: Session = Depends(get_db)
-):
+async def shorten_url(payload: URLCreate, db: Session = Depends(get_db)):
     # Use custom alias or generate one
     short_code = payload.custom_alias or generate_short_code()
 
@@ -40,6 +40,7 @@ async def shorten_url(
     redis_client.setex(short_code, 3600, str(payload.original_url))
 
     return {"short_url": f"https://yourdomain.com/{short_code}"}
+
 
 @router.get("/{short_code}")
 async def redirect_url(short_code: str, db: Session = Depends(get_db)):

@@ -8,9 +8,7 @@ from app.database import engine, Base
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="URL Shortener",
-    description="Production-grade URL shortener",
-    version="1.0.0"
+    title="URL Shortener", description="Production-grade URL shortener", version="1.0.0"
 )
 
 # CORS — allow frontend to call API
