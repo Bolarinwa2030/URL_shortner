@@ -4,8 +4,6 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from app.routes import urls, health
 from app.database import engine, Base
 
-# Create all tables on startup
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="URL Shortener", description="Production-grade URL shortener", version="1.0.0"
