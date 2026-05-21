@@ -1,0 +1,52 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_aCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, push image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/url-shortener:$IMAGE_TAG ./api
+          docker push $ECR_REGISTRY/url-shortener:$IMAGE_TAG
+
+          #for the latest also
+
+          docker tag $ECR_REGISTRY/url-shortener:$IMAGE_TAG \ $ECR_REGISTRY/url-shortener:latest
+          docker push $ECR_REGISTRY/url-shortener:latest
+
+      - name: Update ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: infra/ecs-task-def.json
+          container-name: api
+          image: ${{ steps.login-ecr.outputs.registry }}/url-shortener:${{ git.sha }}
+      - name:
+        uses: aws-actions/aamazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: url-shortener-service
+          cluster: url-shortener-cluster
+          wait-for-service-stability: true #block until healthy
