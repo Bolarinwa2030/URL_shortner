@@ -4,10 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from app.database import Base
 import os
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://test:test@localhost:5432/testdb"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://test:test@localhost:5432/testdb")
+
 
 @pytest.fixture(scope="session")
 def db_engine():
@@ -15,6 +13,7 @@ def db_engine():
     Base.metadata.create_all(bind=engine)
     yield engine
     Base.metadata.drop_all(bind=engine)
+
 
 @pytest.fixture(scope="function")
 def db_session(db_engine):
