@@ -47,6 +47,8 @@ jobs:
           --health-retries 5
       redis:
         image: redis:7-alpine
+        ports:
+          - 6379:6379
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 5s
@@ -61,12 +63,19 @@ jobs:
           python-version: "3.12"
           cache: "pip"
       
-      - run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - run: sudo apt-get update && sudo apt-get install -y postgresql-client redis-tools
 
       - name: Wait for postgres
         run: |
           until pg_isready -h localhost -p 5432 -U test; do
             echo "Waiting for postgres...."
+            sleep 2
+          done
+
+      - name: Wait for Redis
+        run: |
+          until redis-cli -h localhost -p 6379 ping; do
+            echo "Waiting for redis..."
             sleep 2
           done
 
