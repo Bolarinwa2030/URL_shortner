@@ -33,7 +33,8 @@ jobs:
 
           #for the latest also
 
-          docker tag $ECR_REGISTRY/url-shortener:$IMAGE_TAG \ $ECR_REGISTRY/url-shortener:latest
+          docker tag $ECR_REGISTRY/url-shortener:$IMAGE_TAG \ 
+          $ECR_REGISTRY/url-shortener:latest
           docker push $ECR_REGISTRY/url-shortener:latest
 
       - name: Update ECS task definition
@@ -43,8 +44,8 @@ jobs:
           task-definition: infra/ecs-task-def.json
           container-name: api
           image: ${{ steps.login-ecr.outputs.registry }}/url-shortener:${{ github.sha }}
-      - name:
-        uses: aws-actions/aamazon-ecs-deploy-task-definition@v1
+      - name: Deploy to ECS Service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: url-shortener-service
